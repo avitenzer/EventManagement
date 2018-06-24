@@ -20,6 +20,18 @@ public class Event {
         this.tracks = tracks;
     }
 
+    public List<String> asListOfStrings(){
+
+        List<String> results = new ArrayList<String>();
+
+        tracks.stream().forEach( tr ->{
+
+            tr.getTalks().stream().forEach( i-> results.add(i.getStartTime()+" "+i.getTitle()));
+        });
+
+        return results;
+    }
+
     public void printEvent(){
         tracks.stream().forEach( tr ->{
             System.out.println("\n"+tr.getTrackTitle()+"\n");

@@ -3,12 +3,13 @@ package za.co.eventmanagement;
 import junit.framework.Assert;
 import org.junit.Test;
 import za.co.eventmanagement.domain.Talk;
+import za.co.eventmanagement.util.InvalidTalkFormat;
 import za.co.eventmanagement.util.Parser;
 
 public class TestParser {
 
     @Test
-    public void testParser(){
+    public void testParser() throws InvalidTalkFormat {
 
         String line = "Common Ruby Errors 45min";
 
@@ -21,7 +22,7 @@ public class TestParser {
 
 
     @Test
-    public void testParserWhenLighting(){
+    public void testParserWhenLighting() throws InvalidTalkFormat {
 
         String line = "Rails for Python Developers lightning";
 
@@ -29,6 +30,22 @@ public class TestParser {
 
         Assert.assertTrue(talk.getTitle().equals(line));
         Assert.assertTrue(talk.getTimeInMinutes() == 5);
+
+    }
+
+    @Test
+    public void testInvalidFormat(){
+
+        String line = "Rails for Python Developers 45";
+
+        Talk talk = null;
+        try {
+            talk = Parser.parseLine(line);
+        } catch (InvalidTalkFormat invalidTalkFormat) {
+            Assert.assertTrue(invalidTalkFormat.getMessage().equals("The following line doesn't have time: Rails for Python Developers 45"));
+        }
+
+
 
     }
 

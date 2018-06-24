@@ -2,6 +2,7 @@ package za.co.eventmanagement;
 
 import za.co.eventmanagement.domain.Event;
 import za.co.eventmanagement.domain.Talk;
+import za.co.eventmanagement.util.InvalidTalkFormat;
 import za.co.eventmanagement.util.Parser;
 
 import java.io.BufferedReader;
@@ -15,19 +16,22 @@ public class EventManagement {
 
     public static void main(String [] args) throws IOException {
 
-        LinkedList<Talk> talks = new LinkedList<>();
+        try {
+            LinkedList<Talk> talks = new LinkedList<>();
 
-        InputStream inputStream =  EventManagement.class.getClassLoader().getResource("events.txt").openStream();
-        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(streamReader);
+            InputStream inputStream = EventManagement.class.getClassLoader().getResource("events.txt").openStream();
+            InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(streamReader);
 
-        for (String line; (line = reader.readLine()) != null;) {
-            talks.add( Parser.parseLine( line) );
+            for (String line; (line = reader.readLine()) != null; ) {
+                talks.add(Parser.parseLine(line));
+            }
+
+            EventScheduler eventScheduler = new EventScheduler(talks);
+            Event event = eventScheduler.scheduleTalks();
+            event.printEvent();
+        } catch (InvalidTalkFormat itf){
+            System.out.println(" The file contain line with an invalid format "+itf.getMessage());
         }
-
-        EventScheduler eventScheduler = new EventScheduler(talks);
-        Event event = eventScheduler.scheduleTalks();
-        event.printEvent();
-
     }
 }

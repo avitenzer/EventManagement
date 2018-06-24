@@ -10,7 +10,7 @@ public class Parser {
 
     private static final int LIGHTNING_TALK_TIME = 5;
 
-    public static Talk parseLine(String line) {
+    public static Talk parseLine(String line) throws InvalidTalkFormat {
 
         Talk talk = new Talk();
 
@@ -27,6 +27,8 @@ public class Parser {
         } else if (isLightning.test(line)) {
 
             timeInMinutes = LIGHTNING_TALK_TIME;
+        } else {
+            throw new InvalidTalkFormat("The following line doesn't have time: "+line);
         }
 
         talk.setTitle(line);
